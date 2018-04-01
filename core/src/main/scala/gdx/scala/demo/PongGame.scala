@@ -8,13 +8,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.bullet.Bullet
 
-class GdxScalaDemoGame extends ApplicationAdapter {
+class PongGame extends ApplicationAdapter {
   var batch: SpriteBatch = _
   var ballImage: Texture = _
   var paddleImage: Texture = _
   var camera: OrthographicCamera = _
   var paddle: Rectangle = _
   var ball: Rectangle = _
+  var ballUp: Boolean = false
+  var ballDown: Boolean = true
 
   override def create() {
     Bullet.init()
@@ -35,9 +37,25 @@ class GdxScalaDemoGame extends ApplicationAdapter {
     batch.draw(ballImage, ball.x, ball.y)
     batch.draw(paddleImage, paddle.x, paddle.y)
     batch.end()
-    if(Gdx.input.isKeyPressed(Keys.LEFT))
+    if (Gdx.input.isKeyPressed(Keys.LEFT))
       paddle.x -= 200 * Gdx.graphics.getDeltaTime
-    if(Gdx.input.isKeyPressed(Keys.RIGHT))
+    if (Gdx.input.isKeyPressed(Keys.RIGHT))
       paddle.x += 200 * Gdx.graphics.getDeltaTime
+    if (paddle.overlaps(ball) || ball.y > 480 - 16) {
+      flipBallDirection()
+    }
+    advanceBall()
+  }
+
+  def flipBallDirection(): Unit = {
+    ballUp = !ballUp
+    ballDown = !ballDown
+  }
+
+  def advanceBall(): Unit = {
+    if (ballDown)
+      ball.y -= 100 * Gdx.graphics.getDeltaTime
+    if (ballUp)
+      ball.y += 100 * Gdx.graphics.getDeltaTime
   }
 }

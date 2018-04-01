@@ -2,7 +2,7 @@ package gdx.scala.demo.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import gdx.scala.demo.GdxScalaDemoGame;
+import gdx.scala.demo.PongGame;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
@@ -10,6 +10,6 @@ public class DesktopLauncher {
 		config.title = "Pong";
 		config.width = 800;
 		config.height = 480;
-		new LwjglApplication(new GdxScalaDemoGame(), config);
+		new LwjglApplication(new PongGame(), config);
 	}
 }
