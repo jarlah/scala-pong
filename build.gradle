@@ -21,7 +21,7 @@ allprojects {
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
         aiVersion = '1.7.0'
-        scalaVersion = '2.11.7'
+        scalaVersion = '2.12.5'
     }
 
     repositories {
