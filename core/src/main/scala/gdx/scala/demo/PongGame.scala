@@ -12,10 +12,10 @@ class PongGame(width: Int,
                height: Int,
                ballWidth: Int = 16,
                ballHeight: Int = 16,
-               ballSpeed: Int = 100,
+               ballSpeed: Int = 200,
                paddleWidth: Int = 80,
                paddleHeight: Int = 16,
-               paddleSpeed: Int = 200
+               paddleSpeed: Int = 100
               ) extends ApplicationAdapter {
 
   private var batch: SpriteBatch = _
@@ -47,10 +47,7 @@ class PongGame(width: Int,
     batch.draw(ballImage, ball.x, ball.y)
     batch.draw(paddleImage, paddle.x, paddle.y)
     batch.end()
-    if (Gdx.input.isKeyPressed(Keys.LEFT))
-      paddle.x -= paddleSpeed * Gdx.graphics.getDeltaTime
-    if (Gdx.input.isKeyPressed(Keys.RIGHT))
-      paddle.x += paddleSpeed * Gdx.graphics.getDeltaTime
+    advancePaddle()
     if (hitsCeiling || paddle.overlaps(ball)) {
       flipBallDirection()
     }
@@ -67,6 +64,13 @@ class PongGame(width: Int,
   private def flipBallDirection(): Unit = {
     ballUp = !ballUp
     ballDown = !ballDown
+  }
+
+  private def advancePaddle(): Unit = {
+    if (Gdx.input.isKeyPressed(Keys.LEFT))
+      paddle.x -= paddleSpeed * Gdx.graphics.getDeltaTime
+    if (Gdx.input.isKeyPressed(Keys.RIGHT))
+      paddle.x += paddleSpeed * Gdx.graphics.getDeltaTime
   }
 
   private def advanceBall(): Unit = {
