@@ -8,25 +8,35 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.bullet.Bullet
 
-class PongGame extends ApplicationAdapter {
-  var batch: SpriteBatch = _
-  var ballImage: Texture = _
-  var paddleImage: Texture = _
-  var camera: OrthographicCamera = _
-  var paddle: Rectangle = _
-  var ball: Rectangle = _
-  var ballUp: Boolean = false
-  var ballDown: Boolean = true
+class PongGame(width: Int,
+               height: Int,
+               ballWidth: Int = 16,
+               ballHeight: Int = 16,
+               ballSpeed: Int = 100,
+               paddleWidth: Int = 80,
+               paddleHeight: Int = 16,
+               paddleSpeed: Int = 200
+              ) extends ApplicationAdapter {
+
+  private var batch: SpriteBatch = _
+  private var ballImage: Texture = _
+  private var paddleImage: Texture = _
+  private var camera: OrthographicCamera = _
+  private var paddle: Rectangle = _
+  private var ball: Rectangle = _
+  private var ballUp: Boolean = false
+  private var ballDown: Boolean = false
 
   override def create() {
     Bullet.init()
     camera = new OrthographicCamera
-    camera.setToOrtho(false, 800, 480)
+    camera.setToOrtho(false, width, height)
     batch = new SpriteBatch
     ballImage = new Texture("ball.png")
     paddleImage = new Texture("paddle.png")
-    paddle = new Rectangle(800 / 2 - 80 / 2, 20, 80, 16)
-    ball = new Rectangle(800 / 2 - 16 / 2, 300, 16, 16)
+    paddle = new Rectangle(width / 2 - paddleWidth / 2, 20, paddleWidth, paddleHeight)
+    ball = new Rectangle(width / 2 - ballWidth / 2, (height * 0.7).asInstanceOf[Int], ballWidth, ballHeight)
+    ballDown = true
   }
 
   override def render() {
@@ -38,24 +48,31 @@ class PongGame extends ApplicationAdapter {
     batch.draw(paddleImage, paddle.x, paddle.y)
     batch.end()
     if (Gdx.input.isKeyPressed(Keys.LEFT))
-      paddle.x -= 200 * Gdx.graphics.getDeltaTime
+      paddle.x -= paddleSpeed * Gdx.graphics.getDeltaTime
     if (Gdx.input.isKeyPressed(Keys.RIGHT))
-      paddle.x += 200 * Gdx.graphics.getDeltaTime
-    if (paddle.overlaps(ball) || ball.y > 480 - 16) {
+      paddle.x += paddleSpeed * Gdx.graphics.getDeltaTime
+    if (hitsCeiling || paddle.overlaps(ball)) {
       flipBallDirection()
+    }
+    if (hitsFloor) {
+      ball.y = height - ballWidth
     }
     advanceBall()
   }
 
-  def flipBallDirection(): Unit = {
+  private def hitsFloor = ball.y < 0
+
+  private def hitsCeiling = ball.y > height - ballWidth
+
+  private def flipBallDirection(): Unit = {
     ballUp = !ballUp
     ballDown = !ballDown
   }
 
-  def advanceBall(): Unit = {
+  private def advanceBall(): Unit = {
     if (ballDown)
-      ball.y -= 100 * Gdx.graphics.getDeltaTime
+      ball.y -= ballSpeed * Gdx.graphics.getDeltaTime
     if (ballUp)
-      ball.y += 100 * Gdx.graphics.getDeltaTime
+      ball.y += ballSpeed * Gdx.graphics.getDeltaTime
   }
 }
