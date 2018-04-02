@@ -1,7 +1,6 @@
 package gdx.scala.demo.desktop
 
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
+import com.badlogic.gdx.backends.lwjgl.{LwjglApplication, LwjglApplicationConfiguration}
 import gdx.scala.demo.PongGame
 
 object DesktopLauncher extends App {
