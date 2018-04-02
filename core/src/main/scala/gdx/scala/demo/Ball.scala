@@ -3,7 +3,8 @@ package gdx.scala.demo
 import com.badlogic.gdx.math.Rectangle
 
 case class Ball(x: Float, y: Float, width: Int, height: Int, speed: Int = 200) {
-  def asRect: Rectangle = new Rectangle(x, y, width, height)
+  def rectangle: Rectangle = new Rectangle(x, y, width, height)
+  def overlaps(other: Rectangle): Boolean = rectangle.overlaps(other)
 }
 
 object Ball {
