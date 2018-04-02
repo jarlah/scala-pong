@@ -2,8 +2,12 @@ package com.github.jarlah.pong
 
 import com.badlogic.gdx.math.Rectangle
 
-case class Paddle(x: Float, y: Float, width: Int, height: Int, xVelocity: Int = 200) {
-  def rectangle = new Rectangle(x, y, width, height)
+case class Paddle(xPosition: Float,
+                  yPosition: Float,
+                  width: Int,
+                  height: Int,
+                  xVelocity: Int = 200) {
+  def rectangle = new Rectangle(xPosition, yPosition, width, height)
   def overlaps(other: Rectangle) = rectangle.overlaps(other)
 }
 

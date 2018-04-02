@@ -16,8 +16,8 @@ class GameScreen(game: PongGame) extends AbstractScreen {
     game.clearScreen(Color.DARK_GRAY)
     game.batch.begin()
     game.batch.setColor(Color.BLACK)
-    game.batch.draw(ballImage, ball.x, ball.y)
-    game.batch.draw(paddleImage, paddle.x, paddle.y)
+    game.batch.draw(ballImage, ball.xPosition, ball.yPosition)
+    game.batch.draw(paddleImage, paddle.xPosition, paddle.yPosition)
     game.batch.end()
     if (!paused) {
       advancePaddle(delta)
@@ -35,32 +35,44 @@ class GameScreen(game: PongGame) extends AbstractScreen {
     }
   }
 
-  def ballHitsFloor = ball.y < 0
+  def ballHitsFloor = ball.yPosition < 0
 
-  def ballHitsCeiling = ball.y > game.height - ball.width
+  def ballHitsCeiling = ball.yPosition > game.height - ball.width
 
-  def repositionBallAtTop() = ball = ball.copy(y = game.height - ball.width)
+  def repositionBallAtTop() = ball = ball.copy(yPosition = game.height - ball.width)
 
   def flipVerticalBallDirection() = ball = ball.copy(direction = if (ball.direction == BallDown) BallUp else BallDown)
 
   def advanceBall(delta: Float, xVelocity: Float = ball.xVelocity, yVelocity: Float = ball.yVelocity) = {
     ball.direction match {
-      case BallDown => ball = ball.copy(y = ball.y - yVelocity * delta)
-      case BallUp => ball = ball.copy(y = ball.y + yVelocity * delta)
-      case BallLeft => ball = ball.copy(x = ball.x - xVelocity * delta)
-      case BallRight => ball = ball.copy(x = ball.x + xVelocity * delta)
-      case BallUpLeft => ball = ball.copy(y = ball.y + yVelocity * delta, x = ball.x - xVelocity * delta)
-      case BallUpRight => ball = ball.copy(y = ball.y + yVelocity * delta, x = ball.x + xVelocity * delta)
-      case BallDownLeft => ball = ball.copy(y = ball.y - (yVelocity * delta), x = ball.x - xVelocity * delta)
-      case BallDownRight => ball = ball.copy(y = ball.y - (yVelocity * delta), x = ball.x + xVelocity * delta)
+      case BallDown =>
+        ball = ball.copy(yPosition = ball.yPosition - yVelocity * delta)
+      case BallUp =>
+        ball = ball.copy(yPosition = ball.yPosition + yVelocity * delta)
+      case BallLeft =>
+        ball = ball.copy(xPosition = ball.xPosition - xVelocity * delta)
+      case BallRight =>
+        ball = ball.copy(xPosition = ball.xPosition + xVelocity * delta)
+      case BallUpLeft =>
+        ball = ball.copy(yPosition = ball.yPosition + yVelocity * delta,
+          xPosition = ball.xPosition - xVelocity * delta)
+      case BallUpRight =>
+        ball = ball.copy(yPosition = ball.yPosition + yVelocity * delta,
+          xPosition = ball.xPosition + xVelocity * delta)
+      case BallDownLeft =>
+        ball = ball.copy(yPosition = ball.yPosition - (yVelocity * delta),
+          xPosition = ball.xPosition - xVelocity * delta)
+      case BallDownRight =>
+        ball = ball.copy(yPosition = ball.yPosition - (yVelocity * delta),
+          xPosition = ball.xPosition + xVelocity * delta)
     }
   }
 
   def advancePaddle(delta: Float) = {
     if (game.isLeftKeyPressed)
-      paddle = paddle.copy(x = paddle.x - paddle.xVelocity * delta)
+      paddle = paddle.copy(xPosition = paddle.xPosition - paddle.xVelocity * delta)
     if (game.isRightKeyPressed)
-      paddle = paddle.copy(x = paddle.x + paddle.xVelocity * delta)
+      paddle = paddle.copy(xPosition = paddle.xPosition + paddle.xVelocity * delta)
   }
 
   @tailrec
