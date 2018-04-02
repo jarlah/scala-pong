@@ -2,6 +2,8 @@ package com.github.jarlah.pong
 
 import com.badlogic.gdx.graphics.{Color, Texture}
 
+import scala.annotation.tailrec
+
 class GameScreen(game: PongGame) extends AbstractScreen {
 
   val ballImage = new Texture("ball.png")
@@ -19,8 +21,12 @@ class GameScreen(game: PongGame) extends AbstractScreen {
     game.batch.end()
     if (!paused) {
       advancePaddle(delta)
+      if (paddle.overlaps(ball.rectangle)) {
+        fixStuckInPaddleOnTheWayDown()
+        flipVerticalBallDirection()
+      }
       advanceBall(delta)
-      if (ballHitsCeiling || paddle.overlaps(ball.rectangle)) {
+      if (ballHitsCeiling) {
         flipVerticalBallDirection()
       }
       if (ballHitsFloor) {
@@ -37,18 +43,40 @@ class GameScreen(game: PongGame) extends AbstractScreen {
 
   def flipVerticalBallDirection() = ball = ball.copy(direction = if (ball.direction == BallDown) BallUp else BallDown)
 
-  def advanceBall(delta: Float) = {
+  def advanceBall(delta: Float, xVelocity: Float = ball.xVelocity, yVelocity: Float = ball.yVelocity) = {
     if (ball.direction == BallDown)
-      ball = ball.copy(y = ball.y - ball.speed * delta)
+      ball = ball.copy(y = ball.y - yVelocity * delta)
     if (ball.direction == BallUp)
-      ball = ball.copy(y = ball.y + ball.speed * delta)
+      ball = ball.copy(y = ball.y + yVelocity * delta)
+    if (ball.direction == BallLeft)
+      ball = ball.copy(x = ball.x - xVelocity * delta)
+    if (ball.direction == BallRight)
+      ball = ball.copy(x = ball.x + xVelocity * delta)
+    if (ball.direction == BallUpLeft)
+      ball = ball.copy(y = ball.y + yVelocity * delta, x = ball.x - xVelocity * delta)
+    if (ball.direction == BallUpRight)
+      ball = ball.copy(y = ball.y + yVelocity * delta, x = ball.x + xVelocity * delta)
+    if (ball.direction == BallDownLeft)
+      ball = ball.copy(y = ball.y - (yVelocity * delta), x = ball.x - xVelocity * delta)
+    if (ball.direction == BallDownRight)
+      ball = ball.copy(y = ball.y - (yVelocity * delta), x = ball.x + xVelocity * delta)
   }
 
   def advancePaddle(delta: Float) = {
     if (game.isLeftKeyPressed)
-      paddle = paddle.copy(x = paddle.x - paddle.speed * delta)
+      paddle = paddle.copy(x = paddle.x - paddle.xVelocity * delta)
     if (game.isRightKeyPressed)
-      paddle = paddle.copy(x = paddle.x + paddle.speed * delta)
+      paddle = paddle.copy(x = paddle.x + paddle.xVelocity * delta)
+  }
+
+  @tailrec
+  private def fixStuckInPaddleOnTheWayDown(): Unit = {
+    if (ball.direction == BallDownRight || ball.direction == BallDownLeft) {
+      advanceBall(1, 0, -1) // in effect plus
+      if (paddle.overlaps(ball.rectangle)) {
+        fixStuckInPaddleOnTheWayDown()
+      }
+    }
   }
 
   override def dispose() = {
