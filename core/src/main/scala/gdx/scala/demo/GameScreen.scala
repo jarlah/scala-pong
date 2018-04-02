@@ -25,13 +25,13 @@ class GameScreen(game: PongGame) extends AbstractScreen {
     game.batch.end()
     if (!paused) {
       advancePaddle(delta)
+      advanceBall(delta)
       if (ballHitsCeiling || paddle.overlaps(ball.rectangle)) {
         flipVerticalBallDirection()
       }
       if (ballHitsFloor) {
         repositionBallAtTop()
       }
-      advanceBall(delta)
     }
   }
 
