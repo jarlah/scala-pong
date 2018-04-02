@@ -44,22 +44,16 @@ class GameScreen(game: PongGame) extends AbstractScreen {
   def flipVerticalBallDirection() = ball = ball.copy(direction = if (ball.direction == BallDown) BallUp else BallDown)
 
   def advanceBall(delta: Float, xVelocity: Float = ball.xVelocity, yVelocity: Float = ball.yVelocity) = {
-    if (ball.direction == BallDown)
-      ball = ball.copy(y = ball.y - yVelocity * delta)
-    if (ball.direction == BallUp)
-      ball = ball.copy(y = ball.y + yVelocity * delta)
-    if (ball.direction == BallLeft)
-      ball = ball.copy(x = ball.x - xVelocity * delta)
-    if (ball.direction == BallRight)
-      ball = ball.copy(x = ball.x + xVelocity * delta)
-    if (ball.direction == BallUpLeft)
-      ball = ball.copy(y = ball.y + yVelocity * delta, x = ball.x - xVelocity * delta)
-    if (ball.direction == BallUpRight)
-      ball = ball.copy(y = ball.y + yVelocity * delta, x = ball.x + xVelocity * delta)
-    if (ball.direction == BallDownLeft)
-      ball = ball.copy(y = ball.y - (yVelocity * delta), x = ball.x - xVelocity * delta)
-    if (ball.direction == BallDownRight)
-      ball = ball.copy(y = ball.y - (yVelocity * delta), x = ball.x + xVelocity * delta)
+    ball.direction match {
+      case BallDown => ball = ball.copy(y = ball.y - yVelocity * delta)
+      case BallUp => ball = ball.copy(y = ball.y + yVelocity * delta)
+      case BallLeft => ball = ball.copy(x = ball.x - xVelocity * delta)
+      case BallRight => ball = ball.copy(x = ball.x + xVelocity * delta)
+      case BallUpLeft => ball = ball.copy(y = ball.y + yVelocity * delta, x = ball.x - xVelocity * delta)
+      case BallUpRight => ball = ball.copy(y = ball.y + yVelocity * delta, x = ball.x + xVelocity * delta)
+      case BallDownLeft => ball = ball.copy(y = ball.y - (yVelocity * delta), x = ball.x - xVelocity * delta)
+      case BallDownRight => ball = ball.copy(y = ball.y - (yVelocity * delta), x = ball.x + xVelocity * delta)
+    }
   }
 
   def advancePaddle(delta: Float) = {
