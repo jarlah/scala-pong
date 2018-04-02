@@ -1,4 +1,4 @@
-package gdx.scala.demo
+package com.github.jarlah.pong
 
 trait Dimensions {
   val width: Int

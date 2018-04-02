@@ -1,4 +1,4 @@
-package gdx.scala.demo
+package com.github.jarlah.pong
 
 import com.badlogic.gdx.math.Rectangle
 

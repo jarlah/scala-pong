@@ -1,7 +1,7 @@
-package gdx.scala.demo.desktop
+package com.github.jarlah.pong.desktop
 
 import com.badlogic.gdx.backends.lwjgl.{LwjglApplication, LwjglApplicationConfiguration}
-import gdx.scala.demo.PongGame
+import com.github.jarlah.pong.PongGame
 
 object DesktopLauncher extends App {
   val config = new LwjglApplicationConfiguration()
