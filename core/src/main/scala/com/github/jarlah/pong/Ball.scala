@@ -10,7 +10,6 @@ case class Ball(xPosition: Float,
                 xVelocity: Int = 100,
                 direction: BallDirection = BallDownLeft) {
   def rectangle = new Rectangle(xPosition, yPosition, width, height)
-
   def overlaps(other: Rectangle) = rectangle.overlaps(other)
 }
 
