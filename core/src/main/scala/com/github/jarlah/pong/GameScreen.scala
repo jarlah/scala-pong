@@ -32,40 +32,31 @@ class GameScreen(game: PongGame) extends AbstractScreen {
       if (ballHitsFloor) {
         repositionBallAtTop()
       }
+      if (ballHitsLeftWall || ballHitsRightWall) {
+        flipHorizontalBallDirection()
+      }
     }
   }
 
   def ballHitsFloor = ball.yPosition < 0
 
+  def ballHitsLeftWall = ball.xPosition < 0
+
+  def ballHitsRightWall = ball.xPosition > game.width - ball.width
+
   def ballHitsCeiling = ball.yPosition > game.height - ball.width
 
   def repositionBallAtTop() = ball = ball.copy(yPosition = game.height - ball.width)
 
-  def flipVerticalBallDirection() = ball = ball.copy(direction = if (ball.direction == BallDown) BallUp else BallDown)
+  def flipHorizontalBallDirection() = ball = ball.copy(xVelocity = -ball.xVelocity)
+
+  def flipVerticalBallDirection() = ball = ball.copy(yVelocity = -ball.yVelocity)
 
   def advanceBall(delta: Float, xVelocity: Float = ball.xVelocity, yVelocity: Float = ball.yVelocity) = {
-    ball.direction match {
-      case BallDown =>
-        ball = ball.copy(yPosition = ball.yPosition - yVelocity * delta)
-      case BallUp =>
-        ball = ball.copy(yPosition = ball.yPosition + yVelocity * delta)
-      case BallLeft =>
-        ball = ball.copy(xPosition = ball.xPosition - xVelocity * delta)
-      case BallRight =>
-        ball = ball.copy(xPosition = ball.xPosition + xVelocity * delta)
-      case BallUpLeft =>
-        ball = ball.copy(yPosition = ball.yPosition + yVelocity * delta,
-          xPosition = ball.xPosition - xVelocity * delta)
-      case BallUpRight =>
-        ball = ball.copy(yPosition = ball.yPosition + yVelocity * delta,
-          xPosition = ball.xPosition + xVelocity * delta)
-      case BallDownLeft =>
-        ball = ball.copy(yPosition = ball.yPosition - (yVelocity * delta),
-          xPosition = ball.xPosition - xVelocity * delta)
-      case BallDownRight =>
-        ball = ball.copy(yPosition = ball.yPosition - (yVelocity * delta),
-          xPosition = ball.xPosition + xVelocity * delta)
-    }
+      ball = ball.copy(
+        yPosition = ball.yPosition + yVelocity * delta,
+        xPosition = ball.xPosition + xVelocity * delta
+      )
   }
 
   def advancePaddle(delta: Float) = {
@@ -77,12 +68,8 @@ class GameScreen(game: PongGame) extends AbstractScreen {
 
   @tailrec
   private def fixStuckInPaddleOnTheWayDown(): Unit = {
-    ball.direction match {
-      case BallDownRight | BallDownLeft | BallDown =>
-        advanceBall(1, 0, -1)
-      case _ =>
-    }
     if (paddle.overlaps(ball.rectangle)) {
+      advanceBall(1, 0, 1)
       fixStuckInPaddleOnTheWayDown()
     }
   }
