@@ -3,24 +3,25 @@ package gdx.scala.demo
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.{Color, GL20, Texture}
 import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.physics.bullet.Bullet
 import com.badlogic.gdx.{Gdx, Screen}
 
 class GameScreen(game: PongGame) extends Screen {
-  Bullet.init()
 
+  // Immutable ball variables
   val ballWidth: Int = 16
   val ballHeight: Int = 16
   val ballSpeed: Int = 200
   val ballImage = new Texture("ball.png")
   val ball = new Rectangle(game.width / 2 - ballWidth / 2, (game.height * 0.7).asInstanceOf[Int], ballWidth, ballHeight)
 
+  // Immutable paddle variables
   val paddleWidth: Int = 80
   val paddleHeight: Int = 16
   val paddleSpeed: Int = 100
   val paddleImage = new Texture("paddle.png")
   val paddle = new Rectangle(game.width / 2 - paddleWidth / 2, 20, paddleWidth, paddleHeight)
 
+  // Mutable state variables
   var paused: Boolean = false
   var ballUp: Boolean = false
   var ballDown: Boolean = true

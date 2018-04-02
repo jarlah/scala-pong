@@ -4,12 +4,10 @@ import com.badlogic.gdx.backends.lwjgl.{LwjglApplication, LwjglApplicationConfig
 import gdx.scala.demo.PongGame
 
 object DesktopLauncher extends App {
-  val width = 800
-  val height = 480
   val config = new LwjglApplicationConfiguration()
   config.title = "Pong"
-  config.width = width
-  config.height = height
-  val game = new PongGame(width, height)
+  config.width = 800
+  config.height = 480
+  val game = new PongGame(config.width, config.height)
   val app = new LwjglApplication(game, config)
 }
