@@ -3,6 +3,8 @@ package gdx.scala.demo
 import com.badlogic.gdx.Screen
 
 trait AbstractScreen extends Screen {
+  var paused = false
+
   def show(): Unit = {
   }
 
@@ -10,9 +12,11 @@ trait AbstractScreen extends Screen {
   }
 
   def pause(): Unit = {
+    paused = true
   }
 
   def resume(): Unit = {
+    paused = false
   }
 
   def hide(): Unit = {

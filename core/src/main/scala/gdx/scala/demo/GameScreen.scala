@@ -13,7 +13,6 @@ class GameScreen(game: PongGame) extends AbstractScreen {
   var paddle: Paddle = Paddle.create(game)
 
   // Mutable state variables
-  var paused: Boolean = false
   var ballUp: Boolean = false
   var ballDown: Boolean = true
   var ballLeft: Boolean = false
@@ -61,14 +60,6 @@ class GameScreen(game: PongGame) extends AbstractScreen {
       ball = ball.copy(y = ball.y - ball.speed * Gdx.graphics.getDeltaTime)
     if (ballUp)
       ball = ball.copy(y = ball.y + ball.speed * Gdx.graphics.getDeltaTime)
-  }
-
-  override def pause(): Unit = {
-    paused = true
-  }
-
-  override def resume(): Unit = {
-    paused = false
   }
 
   override def dispose(): Unit = {
