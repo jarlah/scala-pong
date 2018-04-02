@@ -11,6 +11,6 @@ class PongGame(val width: Int, val height: Int) extends Game with Dimensions wit
   override def create(): Unit = {
     batch = new SpriteBatch
     font = new BitmapFont
-    this.setScreen(new GameScreen(this))
+    this.setScreen(new MainMenu(this))
   }
 }

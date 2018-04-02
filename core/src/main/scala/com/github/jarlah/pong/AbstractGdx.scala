@@ -10,6 +10,8 @@ trait AbstractGdx {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
   }
   def isKeyPressed(key: Int): Boolean = Gdx.input.isKeyPressed(key)
+  def isTouched: Boolean = Gdx.input.isTouched
+  def isEnterKeyPressed: Boolean = isKeyPressed(Keys.ENTER)
   def isLeftKeyPressed: Boolean = isKeyPressed(Keys.LEFT)
   def isRightKeyPressed: Boolean = isKeyPressed(Keys.RIGHT)
   def isUpKeyPressed: Boolean = isKeyPressed(Keys.UP)
