@@ -6,23 +6,24 @@ import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.physics.bullet.Bullet
 import com.badlogic.gdx.{Gdx, Screen}
 
-class GameScreen(game: PongGame,
-                 ballWidth: Int = 16,
-                 ballHeight: Int = 16,
-                 ballSpeed: Int = 200,
-                 paddleWidth: Int = 80,
-                 paddleHeight: Int = 16,
-                 paddleSpeed: Int = 100
-                ) extends Screen {
+class GameScreen(game: PongGame) extends Screen {
   Bullet.init()
 
-  private val ballImage = new Texture("ball.png")
-  private val paddleImage = new Texture("paddle.png")
-  private val paddle = new Rectangle(game.width / 2 - paddleWidth / 2, 20, paddleWidth, paddleHeight)
-  private val ball = new Rectangle(game.width / 2 - ballWidth / 2, (game.height * 0.7).asInstanceOf[Int], ballWidth, ballHeight)
+  val ballWidth: Int = 16
+  val ballHeight: Int = 16
+  val ballSpeed: Int = 200
+  val ballImage = new Texture("ball.png")
+  val ball = new Rectangle(game.width / 2 - ballWidth / 2, (game.height * 0.7).asInstanceOf[Int], ballWidth, ballHeight)
 
-  private var ballUp: Boolean = false
-  private var ballDown: Boolean = true
+  val paddleWidth: Int = 80
+  val paddleHeight: Int = 16
+  val paddleSpeed: Int = 100
+  val paddleImage = new Texture("paddle.png")
+  val paddle = new Rectangle(game.width / 2 - paddleWidth / 2, 20, paddleWidth, paddleHeight)
+
+  var paused: Boolean = false
+  var ballUp: Boolean = false
+  var ballDown: Boolean = true
 
   def render(delta: Float) {
     Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1)
@@ -32,62 +33,61 @@ class GameScreen(game: PongGame,
     game.batch.draw(ballImage, ball.x, ball.y)
     game.batch.draw(paddleImage, paddle.x, paddle.y)
     game.batch.end()
-    advancePaddle()
-    if (hitsCeiling || paddle.overlaps(ball)) {
-      flipVerticalBallDirection()
+    if (!paused) {
+      advancePaddle()
+      if (hitsCeiling || paddle.overlaps(ball)) {
+        flipVerticalBallDirection()
+      }
+      if (hitsFloor) {
+        repositionBallAtTop()
+      }
+      advanceBall()
     }
-    if (hitsFloor) {
-      repositionBallAtTop()
-    }
-    advanceBall()
   }
 
-  private def repositionBallAtTop(): Unit = ball.y = game.height - ballWidth
+  def repositionBallAtTop(): Unit = ball.y = game.height - ballWidth
 
-  private def hitsFloor = ball.y < 0
+  def hitsFloor: Boolean = ball.y < 0
 
-  private def hitsCeiling = ball.y > game.height - ballWidth
+  def hitsCeiling: Boolean = ball.y > game.height - ballWidth
 
-  private def flipVerticalBallDirection(): Unit = {
+  def flipVerticalBallDirection(): Unit = {
     ballUp = !ballUp
     ballDown = !ballDown
   }
 
-  private def advancePaddle(): Unit = {
+  def advancePaddle(): Unit = {
     if (Gdx.input.isKeyPressed(Keys.LEFT))
       paddle.x -= paddleSpeed * Gdx.graphics.getDeltaTime
     if (Gdx.input.isKeyPressed(Keys.RIGHT))
       paddle.x += paddleSpeed * Gdx.graphics.getDeltaTime
   }
 
-  private def advanceBall(): Unit = {
+  def advanceBall(): Unit = {
     if (ballDown)
       ball.y -= ballSpeed * Gdx.graphics.getDeltaTime
     if (ballUp)
       ball.y += ballSpeed * Gdx.graphics.getDeltaTime
   }
 
-  override def show(): Unit = {
-
+  def show(): Unit = {
   }
 
-  override def resize(width: Int, height: Int): Unit = {
-
+  def resize(width: Int, height: Int): Unit = {
   }
 
-  override def pause(): Unit = {
-
+  def pause(): Unit = {
+    paused = true
   }
 
-  override def resume(): Unit = {
-
+  def resume(): Unit = {
+    paused = false
   }
 
-  override def hide(): Unit = {
-
+  def hide(): Unit = {
   }
 
-  override def dispose(): Unit = {
+  def dispose(): Unit = {
     ballImage.dispose()
     paddleImage.dispose()
   }

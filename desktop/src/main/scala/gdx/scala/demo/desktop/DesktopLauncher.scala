@@ -10,5 +10,6 @@ object DesktopLauncher extends App {
   config.title = "Pong"
   config.width = width
   config.height = height
-  new LwjglApplication(new PongGame(width, height), config)
+  val game = new PongGame(width, height)
+  val app = new LwjglApplication(game, config)
 }
