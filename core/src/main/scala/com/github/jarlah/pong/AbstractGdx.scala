@@ -12,6 +12,7 @@ trait AbstractGdx {
   def isKeyPressed(key: Int): Boolean = Gdx.input.isKeyPressed(key)
   def isTouched: Boolean = Gdx.input.isTouched
   def isEnterKeyPressed: Boolean = isKeyPressed(Keys.ENTER)
+  def isEscapeKeyPressed: Boolean = isKeyPressed(Keys.ESCAPE)
   def isLeftKeyPressed: Boolean = isKeyPressed(Keys.LEFT)
   def isRightKeyPressed: Boolean = isKeyPressed(Keys.RIGHT)
   def isUpKeyPressed: Boolean = isKeyPressed(Keys.UP)

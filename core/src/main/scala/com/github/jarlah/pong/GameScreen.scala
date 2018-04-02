@@ -29,11 +29,12 @@ class GameScreen(game: PongGame) extends AbstractScreen {
       if (ballHitsCeiling) {
         flipVerticalBallDirection()
       }
-      if (ballHitsFloor) {
-        repositionBallAtTop()
-      }
       if (ballHitsLeftWall || ballHitsRightWall) {
         flipHorizontalBallDirection()
+      }
+      if (ballHitsFloor) {
+        game.setScreen(new GameOverScreen(game))
+        dispose()
       }
     }
   }
@@ -45,8 +46,6 @@ class GameScreen(game: PongGame) extends AbstractScreen {
   def ballHitsRightWall = ball.xPosition > game.width - ball.width
 
   def ballHitsCeiling = ball.yPosition > game.height - ball.width
-
-  def repositionBallAtTop() = ball = ball.copy(yPosition = game.height - ball.width)
 
   def flipHorizontalBallDirection() = ball = ball.copy(xVelocity = -ball.xVelocity)
 
