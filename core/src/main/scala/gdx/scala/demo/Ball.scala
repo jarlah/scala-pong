@@ -8,9 +8,9 @@ case class Ball(x: Float, y: Float, width: Int, height: Int, speed: Int = 200) {
 }
 
 object Ball {
-  private[this] val width: Int = 16
-  private[this] val height: Int = 16
-  private[this] val defaultPositionFactor = 0.7f
+  val width: Int = 16
+  val height: Int = 16
+  val defaultPositionFactor = 0.7f
 
   def create(dimensions: Dimensions, initialPosition: Option[Float] = None): Ball =
     Ball(dimensions.width / 2 - width / 2, initialPosition.getOrElse(dimensions.height * defaultPositionFactor), width, height)
