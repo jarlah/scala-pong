@@ -10,12 +10,6 @@ class GameScreen(game: PongGame) extends AbstractScreen {
   val paddleImage = new Texture("paddle.png")
   var paddle = Paddle.create(game)
 
-  // Mutable state variables
-  var ballUp: Boolean = false
-  var ballDown: Boolean = true
-  var ballLeft: Boolean = false
-  var ballRight: Boolean = false
-
   def render(delta: Float) {
     game.clearScreen(Color.DARK_GRAY)
     game.batch.begin()
@@ -35,15 +29,19 @@ class GameScreen(game: PongGame) extends AbstractScreen {
     }
   }
 
-  def repositionBallAtTop() = ball = ball.copy(y = game.height - ball.width)
-
   def ballHitsFloor = ball.y < 0
 
   def ballHitsCeiling = ball.y > game.height - ball.width
 
-  def flipVerticalBallDirection() = {
-    ballUp = !ballUp
-    ballDown = !ballDown
+  def repositionBallAtTop() = ball = ball.copy(y = game.height - ball.width)
+
+  def flipVerticalBallDirection() = ball = ball.copy(direction = if (ball.direction == BallDown) BallUp else BallDown)
+
+  def advanceBall(delta: Float) = {
+    if (ball.direction == BallDown)
+      ball = ball.copy(y = ball.y - ball.speed * delta)
+    if (ball.direction == BallUp)
+      ball = ball.copy(y = ball.y + ball.speed * delta)
   }
 
   def advancePaddle(delta: Float) = {
@@ -51,13 +49,6 @@ class GameScreen(game: PongGame) extends AbstractScreen {
       paddle = paddle.copy(x = paddle.x - paddle.speed * delta)
     if (game.isRightKeyPressed)
       paddle = paddle.copy(x = paddle.x + paddle.speed * delta)
-  }
-
-  def advanceBall(delta: Float) = {
-    if (ballDown)
-      ball = ball.copy(y = ball.y - ball.speed * delta)
-    if (ballUp)
-      ball = ball.copy(y = ball.y + ball.speed * delta)
   }
 
   override def dispose() = {
