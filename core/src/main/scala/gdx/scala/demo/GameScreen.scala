@@ -24,6 +24,8 @@ class GameScreen(game: PongGame) extends Screen {
   var paused: Boolean = false
   var ballUp: Boolean = false
   var ballDown: Boolean = true
+  var ballLeft: Boolean = false
+  var ballRight: Boolean = false
 
   def render(delta: Float) {
     Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1)
@@ -35,10 +37,10 @@ class GameScreen(game: PongGame) extends Screen {
     game.batch.end()
     if (!paused) {
       advancePaddle()
-      if (hitsCeiling || paddle.overlaps(ball)) {
+      if (ballHitsCeiling || paddle.overlaps(ball)) {
         flipVerticalBallDirection()
       }
-      if (hitsFloor) {
+      if (ballHitsFloor) {
         repositionBallAtTop()
       }
       advanceBall()
@@ -47,9 +49,9 @@ class GameScreen(game: PongGame) extends Screen {
 
   def repositionBallAtTop(): Unit = ball.y = game.height - ballWidth
 
-  def hitsFloor: Boolean = ball.y < 0
+  def ballHitsFloor: Boolean = ball.y < 0
 
-  def hitsCeiling: Boolean = ball.y > game.height - ballWidth
+  def ballHitsCeiling: Boolean = ball.y > game.height - ballWidth
 
   def flipVerticalBallDirection(): Unit = {
     ballUp = !ballUp
