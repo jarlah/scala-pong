@@ -2,7 +2,7 @@ package gdx.scala.demo
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
-import com.badlogic.gdx.graphics.{Color, GL20, Texture}
+import com.badlogic.gdx.graphics.{Color, Texture}
 
 class GameScreen(game: PongGame) extends AbstractScreen {
 
@@ -20,8 +20,7 @@ class GameScreen(game: PongGame) extends AbstractScreen {
   var ballRight: Boolean = false
 
   def render(delta: Float) {
-    Gdx.gl.glClearColor(135 / 255f, 206 / 255f, 235 / 255f, 1)
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+    game.clearScreen(Color.DARK_GRAY)
     game.batch.begin()
     game.batch.setColor(Color.BLACK)
     game.batch.draw(ballImage, ball.x, ball.y)
