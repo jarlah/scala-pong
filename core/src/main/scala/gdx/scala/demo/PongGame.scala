@@ -3,7 +3,7 @@ package gdx.scala.demo
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.graphics.g2d.{BitmapFont, SpriteBatch}
 
-class PongGame(val width: Int, val height: Int) extends Game with Dimensions with AbstractGL20 {
+class PongGame(val width: Int, val height: Int) extends Game with Dimensions with AbstractGdx {
 
   var batch: SpriteBatch = _
   var font: BitmapFont = _

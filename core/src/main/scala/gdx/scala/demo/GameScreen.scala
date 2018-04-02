@@ -1,7 +1,5 @@
 package gdx.scala.demo
 
-import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.{Color, Texture}
 
 class GameScreen(game: PongGame) extends AbstractScreen {
@@ -26,14 +24,14 @@ class GameScreen(game: PongGame) extends AbstractScreen {
     game.batch.draw(paddleImage, paddle.x, paddle.y)
     game.batch.end()
     if (!paused) {
-      advancePaddle()
+      advancePaddle(delta)
       if (ballHitsCeiling || paddle.overlaps(ball.rectangle)) {
         flipVerticalBallDirection()
       }
       if (ballHitsFloor) {
         repositionBallAtTop()
       }
-      advanceBall()
+      advanceBall(delta)
     }
   }
 
@@ -48,18 +46,18 @@ class GameScreen(game: PongGame) extends AbstractScreen {
     ballDown = !ballDown
   }
 
-  def advancePaddle(): Unit = {
-    if (Gdx.input.isKeyPressed(Keys.LEFT))
-      paddle = paddle.copy(x = paddle.x - paddle.speed * Gdx.graphics.getDeltaTime)
-    if (Gdx.input.isKeyPressed(Keys.RIGHT))
-      paddle = paddle.copy(x = paddle.x + paddle.speed * Gdx.graphics.getDeltaTime)
+  def advancePaddle(delta: Float): Unit = {
+    if (game.isLeftKeyPressed)
+      paddle = paddle.copy(x = paddle.x - paddle.speed * delta)
+    if (game.isRightKeyPressed)
+      paddle = paddle.copy(x = paddle.x + paddle.speed * delta)
   }
 
-  def advanceBall(): Unit = {
+  def advanceBall(delta: Float): Unit = {
     if (ballDown)
-      ball = ball.copy(y = ball.y - ball.speed * Gdx.graphics.getDeltaTime)
+      ball = ball.copy(y = ball.y - ball.speed * delta)
     if (ballUp)
-      ball = ball.copy(y = ball.y + ball.speed * Gdx.graphics.getDeltaTime)
+      ball = ball.copy(y = ball.y + ball.speed * delta)
   }
 
   override def dispose(): Unit = {
