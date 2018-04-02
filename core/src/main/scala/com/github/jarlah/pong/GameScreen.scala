@@ -77,11 +77,13 @@ class GameScreen(game: PongGame) extends AbstractScreen {
 
   @tailrec
   private def fixStuckInPaddleOnTheWayDown(): Unit = {
-    if (ball.direction == BallDownRight || ball.direction == BallDownLeft) {
-      advanceBall(1, 0, -1) // in effect plus
-      if (paddle.overlaps(ball.rectangle)) {
-        fixStuckInPaddleOnTheWayDown()
-      }
+    ball.direction match {
+      case BallDownRight | BallDownLeft | BallDown =>
+        advanceBall(1, 0, -1)
+      case _ =>
+    }
+    if (paddle.overlaps(ball.rectangle)) {
+      fixStuckInPaddleOnTheWayDown()
     }
   }
 
