@@ -1,25 +1,16 @@
 package gdx.scala.demo
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input.Keys
 import com.badlogic.gdx.graphics.{Color, GL20, Texture}
-import com.badlogic.gdx.math.Rectangle
-import com.badlogic.gdx.{Gdx, Screen}
 
-class GameScreen(game: PongGame) extends Screen {
+class GameScreen(game: PongGame) extends AbstractScreen {
 
-  // Immutable ball variables
-  val ballWidth: Int = 16
-  val ballHeight: Int = 16
-  val ballSpeed: Int = 200
   val ballImage = new Texture("ball.png")
-  val ball = new Rectangle(game.width / 2 - ballWidth / 2, (game.height * 0.7).asInstanceOf[Int], ballWidth, ballHeight)
+  var ball: Ball = Ball.create(game)
 
-  // Immutable paddle variables
-  val paddleWidth: Int = 80
-  val paddleHeight: Int = 16
-  val paddleSpeed: Int = 100
   val paddleImage = new Texture("paddle.png")
-  val paddle = new Rectangle(game.width / 2 - paddleWidth / 2, 20, paddleWidth, paddleHeight)
+  var paddle: Paddle = Paddle.create(game)
 
   // Mutable state variables
   var paused: Boolean = false
@@ -38,7 +29,7 @@ class GameScreen(game: PongGame) extends Screen {
     game.batch.end()
     if (!paused) {
       advancePaddle()
-      if (ballHitsCeiling || paddle.overlaps(ball)) {
+      if (ballHitsCeiling || paddle.asRect.overlaps(ball.asRect)) {
         flipVerticalBallDirection()
       }
       if (ballHitsFloor) {
@@ -48,11 +39,11 @@ class GameScreen(game: PongGame) extends Screen {
     }
   }
 
-  def repositionBallAtTop(): Unit = ball.y = game.height - ballWidth
+  def repositionBallAtTop(): Unit = ball = ball.copy(y = game.height - ball.width)
 
   def ballHitsFloor: Boolean = ball.y < 0
 
-  def ballHitsCeiling: Boolean = ball.y > game.height - ballWidth
+  def ballHitsCeiling: Boolean = ball.y > game.height - ball.width
 
   def flipVerticalBallDirection(): Unit = {
     ballUp = !ballUp
@@ -61,36 +52,27 @@ class GameScreen(game: PongGame) extends Screen {
 
   def advancePaddle(): Unit = {
     if (Gdx.input.isKeyPressed(Keys.LEFT))
-      paddle.x -= paddleSpeed * Gdx.graphics.getDeltaTime
+      paddle = paddle.copy(x = paddle.x - paddle.speed * Gdx.graphics.getDeltaTime)
     if (Gdx.input.isKeyPressed(Keys.RIGHT))
-      paddle.x += paddleSpeed * Gdx.graphics.getDeltaTime
+      paddle = paddle.copy(x = paddle.x + paddle.speed * Gdx.graphics.getDeltaTime)
   }
 
   def advanceBall(): Unit = {
     if (ballDown)
-      ball.y -= ballSpeed * Gdx.graphics.getDeltaTime
+      ball = ball.copy(y = ball.y - ball.speed * Gdx.graphics.getDeltaTime)
     if (ballUp)
-      ball.y += ballSpeed * Gdx.graphics.getDeltaTime
+      ball = ball.copy(y = ball.y + ball.speed * Gdx.graphics.getDeltaTime)
   }
 
-  def show(): Unit = {
-  }
-
-  def resize(width: Int, height: Int): Unit = {
-  }
-
-  def pause(): Unit = {
+  override def pause(): Unit = {
     paused = true
   }
 
-  def resume(): Unit = {
+  override def resume(): Unit = {
     paused = false
   }
 
-  def hide(): Unit = {
-  }
-
-  def dispose(): Unit = {
+  override def dispose(): Unit = {
     ballImage.dispose()
     paddleImage.dispose()
   }
